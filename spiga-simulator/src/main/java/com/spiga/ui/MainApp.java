@@ -30,9 +30,9 @@ public class MainApp extends Application {
             System.out.println("Global target set to: " + target + " (" + type + ")");
         });
 
-        dashboard.setOnCreateGroupMission((ids, target) -> {
-            System.out.println("Creating group mission for assets: " + ids);
-            bootstrap.createGroupMission(context, ids, target);
+        dashboard.setOnCreateGroupMission((ids, target, objectif) -> {
+            System.out.println("Creating group mission for assets: " + ids + " objective: " + objectif);
+            bootstrap.createGroupMission(context, ids, target, objectif);
         });
 
         dashboard.setAssetCreator((type, id, pos) -> {

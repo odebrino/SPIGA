@@ -29,13 +29,15 @@ public class VehiculeSousMarinTest {
 
     @Test
     public void testDepthConstraint() {
-        // Submarines shouldn't fly
         Point3D target = new Point3D(500, 500, 100);
         sub.deplacer(target, zone);
 
-        // Assuming implementation prevents going above water or clamps it
-        // If not explicitly handled, it might just move.
-        // But let's check if it stays underwater or at surface (0).
         assertTrue(sub.getPosition().getZ() <= 0);
+    }
+
+    @Test
+    public void testConstructorClampsDepthAboveSeaLevel() {
+        VehiculeSousMarin highSub = new VehiculeSousMarin("U2", new Point3D(100, 100, 80));
+        assertEquals(0.0, highSub.getPosition().getZ(), 0.001);
     }
 }

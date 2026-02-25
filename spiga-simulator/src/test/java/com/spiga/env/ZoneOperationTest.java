@@ -1,9 +1,9 @@
 package com.spiga.env;
 
 import com.spiga.core.Point3D;
+import java.util.List;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import java.util.List;
 import static org.junit.jupiter.api.Assertions.*;
 
 public class ZoneOperationTest {
@@ -17,23 +17,26 @@ public class ZoneOperationTest {
 
     @Test
     public void testIsLand() {
-        // Island 1 at (300, 300) radius 150
         assertTrue(zone.isLand(new Point3D(300, 300, 0)));
-        assertTrue(zone.isLand(new Point3D(400, 300, 0))); // Inside
-        assertFalse(zone.isLand(new Point3D(500, 500, 0))); // Outside
+        assertTrue(zone.isLand(new Point3D(400, 300, 0)));
+        assertFalse(zone.isLand(new Point3D(500, 500, 0)));
+    }
+
+    @Test
+    public void testRectangularIslandIsCentered() {
+        assertTrue(zone.isLand(new Point3D(700, 700, 0)));
+        assertTrue(zone.isLand(new Point3D(800, 850, 0))); // boundary point
+        assertFalse(zone.isLand(new Point3D(810, 700, 0))); // outside width
     }
 
     @Test
     public void testFindPathMarine() {
-        // Start at (100, 100) [Water], End at (500, 500) [Water]
-        // Island at (300, 300) blocks direct path
         Point3D start = new Point3D(100, 100, 0);
         Point3D end = new Point3D(500, 500, 0);
 
-        List<Point3D> path = zone.findPath(start, end, true); // isMarine=true
+        List<Point3D> path = zone.findPath(start, end, true);
 
         assertFalse(path.isEmpty());
-        // Verify no point in path is on land
         for (Point3D p : path) {
             assertFalse(zone.isLand(p), "Marine path should not cross land at " + p);
         }
@@ -41,14 +44,12 @@ public class ZoneOperationTest {
 
     @Test
     public void testFindPathLand() {
-        // Start at (300, 300) [Island 1], End at (350, 350) [Island 1]
         Point3D start = new Point3D(300, 300, 0);
         Point3D end = new Point3D(350, 350, 0);
 
-        List<Point3D> path = zone.findPath(start, end, false); // isMarine=false (Land)
+        List<Point3D> path = zone.findPath(start, end, false);
 
         assertFalse(path.isEmpty());
-        // Verify all points in path are on land
         for (Point3D p : path) {
             assertTrue(zone.isLand(p), "Land path should not cross water at " + p);
         }

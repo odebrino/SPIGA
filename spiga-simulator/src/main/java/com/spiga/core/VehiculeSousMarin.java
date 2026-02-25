@@ -2,18 +2,20 @@ package com.spiga.core;
 
 /**
  * Class representing a submarine.
- * Capable of underwater movement (Z < 0).
  */
 public class VehiculeSousMarin extends ActifMarin {
 
-    /**
-     * Constructor for VehiculeSousMarin.
-     * 
-     * @param id       Unique identifier.
-     * @param position Initial position (Z should be < 0).
-     */
     public VehiculeSousMarin(String id, Point3D position) {
-        super(id, position, 40.0, 200.0); // Slow, very high autonomy
+        super(id, sanitizeDepth(position), 40.0, 200.0);
+    }
+
+    private static Point3D sanitizeDepth(Point3D position) {
+        return new Point3D(position.getX(), position.getY(), Math.min(position.getZ(), 0));
+    }
+
+    @Override
+    public void setPosition(Point3D position) {
+        super.setPosition(new Point3D(position.getX(), position.getY(), Math.min(position.getZ(), 0)));
     }
 
     @Override
@@ -23,27 +25,36 @@ public class VehiculeSousMarin extends ActifMarin {
 
     @Override
     public void demarrer() {
-        System.out.println(getId() + " : Moteurs sous-marins activés.");
+        super.demarrer();
     }
 
     @Override
     public void arreter() {
-        System.out.println(getId() + " : Moteurs sous-marins arrêtés.");
+        super.arreter();
     }
 
     @Override
     public void recharger(double quantite) {
         setAutonomieActuelle(Math.min(getAutonomieMax(), getAutonomieActuelle() + quantite));
-        System.out.println(getId() + " : Batteries rechargées. Niveau: " + getAutonomieActuelle());
     }
 
     @Override
     public void ravitailler() {
-        // Not applicable for battery, but maybe for oxygen/supplies
+        setAutonomieActuelle(getAutonomieMax());
     }
 
     @Override
     public void notifierEtatCritique(TypeAlerte type) {
         System.out.println("ALERTE SOUS-MARIN " + getId() + ": " + type);
+    }
+
+    @Override
+    protected double normaliserProfondeurCible(double requestedZ) {
+        return Math.min(requestedZ, 0);
+    }
+
+    @Override
+    protected Point3D normaliserPositionMarine(Point3D position) {
+        return new Point3D(position.getX(), position.getY(), Math.min(position.getZ(), 0));
     }
 }

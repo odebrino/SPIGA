@@ -81,12 +81,15 @@ cd spiga-simulator
 mvn exec:java -Dexec.mainClass="com.spiga.ui.ConsoleInterface"
 ```
 
-## Project Structure (Sprint 1)
+## Project Structure
 
-The project is now organized with a dedicated application layer:
+The project is organized with a dedicated application layer and split environment services:
 
 - `com.spiga.core`: domain models and vehicle behavior
-- `com.spiga.env`: environment, terrain and collision/pathfinding utilities
+- `com.spiga.env`: environment orchestration (`ZoneOperation`) and dedicated services
+  - `TerrainService`: land/sea terrain checks
+  - `CollisionService`: obstacle and dynamic collision checks
+  - `PathfindingService`: grid-based A* pathfinding
 - `com.spiga.mission`: mission and fleet orchestration domain objects
 - `com.spiga.app`: application bootstrap/services (`SimulationContext`, `SimulationBootstrap`, `AssetFactory`)
 - `com.spiga.ui`: JavaFX and CLI frontends

@@ -84,21 +84,22 @@ public class SimulationBootstrap {
         }
     }
 
-    public Mission createGroupMission(SimulationContext context, List<String> ids, Point3D target) {
-        Mission mission = new MissionReconnaissance("Mission-" + System.currentTimeMillis());
-        mission.setObjectif(ObjectifMission.RECONNAISSANCE);
+    public Mission createGroupMission(
+            SimulationContext context,
+            List<String> ids,
+            Point3D target,
+            ObjectifMission objectif) {
 
-        if (ids == null) {
+        Mission mission = new MissionReconnaissance("Mission-" + System.currentTimeMillis());
+        mission.setObjectif(objectif == null ? ObjectifMission.RECONNAISSANCE : objectif);
+
+        if (ids == null || ids.isEmpty()) {
             mission.demarrer();
             return mission;
         }
 
         for (String id : ids) {
-            ActifMobile asset = context.getGestionnaire().getFlotte().stream()
-                    .filter(a -> a.getId().equals(id))
-                    .findFirst()
-                    .orElse(null);
-
+            ActifMobile asset = context.getGestionnaire().getActifParId(id);
             if (asset != null) {
                 mission.assignerActif(asset);
                 asset.setTarget(target);

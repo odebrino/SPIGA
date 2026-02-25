@@ -2,6 +2,7 @@ package com.spiga.mission;
 
 import com.spiga.core.ActifMobile;
 import com.spiga.core.DroneReconnaissance;
+import com.spiga.core.EtatOperationnel;
 import com.spiga.core.Point3D;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -19,12 +20,12 @@ public class MissionTest {
     }
 
     @Test
-    public void testAssignAsset() {
+    public void testAssignAssetAvoidsDuplicates() {
         mission.assignerActif(drone);
-        // Mission class doesn't expose assigned assets list directly,
-        // but we can check if drone state changed or if no exception occurred.
-        // Assuming assignment works if no error.
-        // We can verify drone is in mission? Not until started.
+        mission.assignerActif(drone);
+
+        assertEquals(1, mission.getActifsAssignes().size());
+        assertEquals("D1", mission.getActifsAssignes().get(0).getId());
     }
 
     @Test
@@ -32,11 +33,18 @@ public class MissionTest {
         mission.assignerActif(drone);
         mission.demarrer();
 
-        // Drone should be in mission state (or at least started)
-        // Note: DroneReconnaissance starts in AU_SOL, demarrer might not change it
-        // immediately
-        // without movement command, but let's check if it runs without error.
-        assertEquals(com.spiga.core.EtatOperationnel.AU_SOL, drone.getEtat()); // Initial state
+        assertEquals(StatutMission.EN_COURS, mission.getStatut());
+        assertEquals(EtatOperationnel.EN_MISSION, drone.getEtat());
+    }
+
+    @Test
+    public void testTerminateMission() {
+        mission.assignerActif(drone);
+        mission.demarrer();
+        mission.terminer();
+
+        assertEquals(StatutMission.TERMINEE, mission.getStatut());
+        assertEquals(EtatOperationnel.AU_SOL, drone.getEtat());
     }
 
     @Test

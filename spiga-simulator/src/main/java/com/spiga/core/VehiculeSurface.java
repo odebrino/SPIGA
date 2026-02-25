@@ -2,18 +2,11 @@ package com.spiga.core;
 
 /**
  * Class representing a surface vessel (boat).
- * Restricted to water surface (Z=0).
  */
 public class VehiculeSurface extends ActifMarin {
 
-    /**
-     * Constructor for VehiculeSurface.
-     * 
-     * @param id       Unique identifier.
-     * @param position Initial position.
-     */
     public VehiculeSurface(String id, Point3D position) {
-        super(id, position, 60.0, 150.0); // Medium speed, high autonomy
+        super(id, new Point3D(position.getX(), position.getY(), 0), 60.0, 150.0);
     }
 
     @Override
@@ -23,18 +16,17 @@ public class VehiculeSurface extends ActifMarin {
 
     @Override
     public void demarrer() {
-        System.out.println(getId() + " : Moteurs surface activés.");
+        super.demarrer();
     }
 
     @Override
     public void arreter() {
-        System.out.println(getId() + " : Moteurs surface arrêtés.");
+        super.arreter();
     }
 
     @Override
     public void recharger(double quantite) {
         setAutonomieActuelle(Math.min(getAutonomieMax(), getAutonomieActuelle() + quantite));
-        System.out.println(getId() + " : Carburant ravitaillé. Niveau: " + getAutonomieActuelle());
     }
 
     @Override
@@ -49,7 +41,16 @@ public class VehiculeSurface extends ActifMarin {
 
     @Override
     public void setPosition(Point3D position) {
-        // Ensure Z is always 0
         super.setPosition(new Point3D(position.getX(), position.getY(), 0));
+    }
+
+    @Override
+    protected double normaliserProfondeurCible(double requestedZ) {
+        return 0;
+    }
+
+    @Override
+    protected Point3D normaliserPositionMarine(Point3D position) {
+        return new Point3D(position.getX(), position.getY(), 0);
     }
 }

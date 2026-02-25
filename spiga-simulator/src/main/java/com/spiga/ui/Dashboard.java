@@ -3,60 +3,69 @@ package com.spiga.ui;
 import com.spiga.core.ActifMobile;
 import com.spiga.core.Point3D;
 import com.spiga.mission.GestionnaireEssaim;
+import com.spiga.mission.ObjectifMission;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.function.BiConsumer;
 import javafx.geometry.Insets;
-import javafx.scene.control.*;
+import javafx.scene.control.Alert;
+import javafx.scene.control.Button;
+import javafx.scene.control.ComboBox;
+import javafx.scene.control.Label;
+import javafx.scene.control.ListView;
+import javafx.scene.control.SelectionMode;
+import javafx.scene.control.TextField;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 
-import com.spiga.mission.ObjectifMission;
-import java.util.function.BiConsumer;
-
 public class Dashboard extends VBox {
-    private GestionnaireEssaim gestionnaire;
+    private final GestionnaireEssaim gestionnaire;
     private ListView<String> assetList;
 
     private ComboBox<String> typeSelect;
     private TextField idInput;
-    private TextField xInput, yInput, zInput;
+    private TextField xInput;
+    private TextField yInput;
+    private TextField zInput;
+
     private AssetCreator assetCreator;
     private BiConsumer<Point3D, ObjectifMission> onSetTarget;
+    private GroupMissionCreator onCreateGroupMission;
 
-    /**
-     * Functional interface for creating assets.
-     */
     public interface AssetCreator {
         void create(String type, String id, Point3D position);
     }
 
-    /**
-     * Constructor for Dashboard.
-     * 
-     * @param gestionnaire The fleet manager.
-     */
+    public interface GroupMissionCreator {
+        void create(List<String> assetIds, Point3D target, ObjectifMission objectif);
+    }
+
     public Dashboard(GestionnaireEssaim gestionnaire) {
         this(gestionnaire, null);
     }
 
-    /**
-     * Constructor for Dashboard with asset creator callback.
-     * 
-     * @param gestionnaire The fleet manager.
-     * @param assetCreator Callback for creating assets.
-     */
     public Dashboard(GestionnaireEssaim gestionnaire, AssetCreator assetCreator) {
         this.gestionnaire = gestionnaire;
         this.assetCreator = assetCreator;
-        this.setPadding(new Insets(10));
-        this.setSpacing(10);
-        this.setStyle("-fx-background-color: #f0f0f0; -fx-border-color: #ccc;");
-        this.setPrefWidth(300);
 
-        // Title
+        setPadding(new Insets(10));
+        setSpacing(10);
+        setStyle("-fx-background-color: #f0f0f0; -fx-border-color: #ccc;");
+        setPrefWidth(300);
+
+        buildHeader();
+        buildCreationSection();
+        buildFleetSection();
+        buildTargetSection();
+    }
+
+    private void buildHeader() {
         Label title = new Label("Dashboard");
         title.setStyle("-fx-font-size: 18px; -fx-font-weight: bold;");
-        this.getChildren().add(title);
+        getChildren().add(title);
+    }
 
-        // Asset Creation Section
+    private void buildCreationSection() {
         VBox creationBox = new VBox(5);
         creationBox.setStyle("-fx-border-color: #aaa; -fx-padding: 5;");
         creationBox.getChildren().add(new Label("Add New Asset:"));
@@ -86,24 +95,26 @@ public class Dashboard extends VBox {
         addButton.setOnAction(e -> handleAddAsset());
 
         creationBox.getChildren().addAll(typeSelect, idInput, posBox, addButton);
-        this.getChildren().add(creationBox);
+        getChildren().add(creationBox);
+    }
 
-        // Asset List
-        this.getChildren().add(new Label("Current Assets:"));
+    private void buildFleetSection() {
+        getChildren().add(new Label("Current Assets:"));
+
         assetList = new ListView<>();
         assetList.getSelectionModel().setSelectionMode(SelectionMode.MULTIPLE);
-        update(); // Initial population
-        this.getChildren().add(assetList);
+        update();
+        getChildren().add(assetList);
 
-        // Refresh Button
         Button refreshBtn = new Button("Refresh List");
         refreshBtn.setOnAction(e -> update());
-        this.getChildren().add(refreshBtn);
+        getChildren().add(refreshBtn);
+    }
 
-        // Target Control
+    private void buildTargetSection() {
         VBox targetBox = new VBox(5);
         targetBox.setStyle("-fx-border-color: #aaa; -fx-padding: 5;");
-        targetBox.getChildren().add(new Label("Set Target (All):"));
+        targetBox.getChildren().add(new Label("Set Target:"));
 
         HBox targetPosBox = new HBox(5);
         TextField txInput = new TextField("500");
@@ -124,28 +135,17 @@ public class Dashboard extends VBox {
                 double x = Double.parseDouble(txInput.getText());
                 double y = Double.parseDouble(tyInput.getText());
                 double z = Double.parseDouble(tzInput.getText());
+
                 Point3D target = new Point3D(x, y, z);
+                ObjectifMission objectif = missionTypeSelect.getValue();
+                List<String> selectedIds = getSelectedAssetIds();
 
-                // Check for selection
-                java.util.List<String> selectedItems = assetList.getSelectionModel().getSelectedItems();
-
-                if (!selectedItems.isEmpty()) {
-                    // Group Mission Logic (Selected Assets)
-                    java.util.List<String> selectedIds = new java.util.ArrayList<>();
-                    for (String item : selectedItems) {
-                        if (item != null && !item.isEmpty()) {
-                            selectedIds.add(item.split(" ")[0]);
-                        }
-                    }
-
+                if (!selectedIds.isEmpty()) {
                     if (onCreateGroupMission != null) {
-                        onCreateGroupMission.accept(selectedIds, target);
+                        onCreateGroupMission.create(selectedIds, target, objectif);
                     }
-                } else {
-                    // Global Logic (All Assets)
-                    if (onSetTarget != null) {
-                        onSetTarget.accept(target, missionTypeSelect.getValue());
-                    }
+                } else if (onSetTarget != null) {
+                    onSetTarget.accept(target, objectif);
                 }
             } catch (NumberFormatException ex) {
                 showAlert("Invalid target coordinates!");
@@ -153,71 +153,60 @@ public class Dashboard extends VBox {
         });
 
         targetBox.getChildren().addAll(targetPosBox, missionTypeSelect, setTargetBtn);
-        this.getChildren().add(targetBox);
+        getChildren().add(targetBox);
     }
 
-    private BiConsumer<java.util.List<String>, Point3D> onCreateGroupMission;
-
-    public void setOnCreateGroupMission(BiConsumer<java.util.List<String>, Point3D> callback) {
+    public void setOnCreateGroupMission(GroupMissionCreator callback) {
         this.onCreateGroupMission = callback;
     }
 
-    /**
-     * Sets the asset creator callback.
-     * 
-     * @param creator The callback.
-     */
     public void setAssetCreator(AssetCreator creator) {
         this.assetCreator = creator;
     }
 
-    /**
-     * Sets the callback for setting a target.
-     * 
-     * @param onSetTarget The callback.
-     */
     public void setOnSetTarget(BiConsumer<Point3D, ObjectifMission> onSetTarget) {
         this.onSetTarget = onSetTarget;
     }
 
-    /**
-     * Handles the "Add Asset" button click.
-     */
     private void handleAddAsset() {
-        if (assetCreator != null) {
-            try {
-                String type = typeSelect.getValue();
-                String id = idInput.getText();
-                double x = Double.parseDouble(xInput.getText());
-                double y = Double.parseDouble(yInput.getText());
-                double z = Double.parseDouble(zInput.getText());
+        if (assetCreator == null) {
+            return;
+        }
 
-                if (id.isEmpty()) {
-                    showAlert("ID is required!");
-                    return;
-                }
+        try {
+            String type = typeSelect.getValue();
+            String id = idInput.getText();
+            double x = Double.parseDouble(xInput.getText());
+            double y = Double.parseDouble(yInput.getText());
+            double z = Double.parseDouble(zInput.getText());
 
-                assetCreator.create(type, id, new Point3D(x, y, z));
-                idInput.clear(); // Reset ID for next
-            } catch (NumberFormatException ex) {
-                showAlert("Invalid coordinates!");
+            if (id == null || id.isBlank()) {
+                showAlert("ID is required!");
+                return;
             }
+
+            assetCreator.create(type, id, new Point3D(x, y, z));
+            idInput.clear();
+        } catch (NumberFormatException ex) {
+            showAlert("Invalid coordinates!");
         }
     }
 
-    /**
-     * Updates the asset list view.
-     */
-    public void update() {
-        // Store current selection
-        java.util.List<String> selectedItems = new java.util.ArrayList<>(
-                assetList.getSelectionModel().getSelectedItems());
-        java.util.List<String> selectedIds = new java.util.ArrayList<>();
+    private List<String> getSelectedAssetIds() {
+        List<String> selectedItems = new ArrayList<>(assetList.getSelectionModel().getSelectedItems());
+        List<String> selectedIds = new ArrayList<>();
+
         for (String item : selectedItems) {
             if (item != null && !item.isEmpty()) {
                 selectedIds.add(item.split(" ")[0]);
             }
         }
+
+        return selectedIds;
+    }
+
+    public void update() {
+        List<String> selectedIds = getSelectedAssetIds();
 
         assetList.getItems().clear();
         for (ActifMobile actif : gestionnaire.getFlotte()) {
@@ -229,7 +218,6 @@ public class Dashboard extends VBox {
             assetList.getItems().add(status);
         }
 
-        // Restore selection
         assetList.getSelectionModel().clearSelection();
         for (int i = 0; i < assetList.getItems().size(); i++) {
             String item = assetList.getItems().get(i);
@@ -240,11 +228,6 @@ public class Dashboard extends VBox {
         }
     }
 
-    /**
-     * Shows an alert dialog.
-     * 
-     * @param message The message to display.
-     */
     private void showAlert(String message) {
         Alert alert = new Alert(Alert.AlertType.ERROR);
         alert.setTitle("Error");
