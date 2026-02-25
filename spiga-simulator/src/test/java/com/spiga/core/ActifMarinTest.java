@@ -20,7 +20,7 @@ public class ActifMarinTest {
     @Test
     public void testMovementOnWater() {
         Point3D initial = new Point3D(boat.getPosition().getX(), boat.getPosition().getY(), boat.getPosition().getZ());
-        Point3D target = new Point3D(600, 600, 0);
+        Point3D target = new Point3D(550, 500, 0);
 
         boat.deplacer(target, zone);
 

@@ -1,6 +1,7 @@
 package com.spiga.app;
 
 import com.spiga.core.ActifMobile;
+import com.spiga.core.ActifMarin;
 import com.spiga.core.DroneLogistique;
 import com.spiga.core.DroneReconnaissance;
 import com.spiga.core.Point3D;
@@ -79,8 +80,16 @@ public class SimulationBootstrap {
     }
 
     public void assignGlobalTarget(SimulationContext context, Point3D target) {
+        if (target == null) {
+            return;
+        }
+
         for (ActifMobile actif : context.getGestionnaire().getFlotte()) {
-            actif.setTarget(target);
+            if (isTargetCompatible(actif, target, context.getZone())) {
+                actif.setTarget(normalizeTargetForAsset(actif, target));
+            } else {
+                actif.setTarget(null);
+            }
         }
     }
 
@@ -100,13 +109,39 @@ public class SimulationBootstrap {
 
         for (String id : ids) {
             ActifMobile asset = context.getGestionnaire().getActifParId(id);
-            if (asset != null) {
+            if (asset != null && isTargetCompatible(asset, target, context.getZone())) {
                 mission.assignerActif(asset);
-                asset.setTarget(target);
+                asset.setTarget(normalizeTargetForAsset(asset, target));
             }
         }
 
         mission.demarrer();
         return mission;
+    }
+
+    private boolean isTargetCompatible(ActifMobile asset, Point3D target, ZoneOperation zone) {
+        if (asset == null || target == null || zone == null) {
+            return false;
+        }
+
+        Point3D terrainProbe = new Point3D(target.getX(), target.getY(), 0);
+        if (asset instanceof ActifMarin && zone.isLand(terrainProbe)) {
+            return false;
+        }
+        if (asset instanceof VehiculeTerrestre && !zone.isLand(terrainProbe)) {
+            return false;
+        }
+
+        return true;
+    }
+
+    private Point3D normalizeTargetForAsset(ActifMobile asset, Point3D target) {
+        if (asset instanceof VehiculeTerrestre || asset instanceof VehiculeSurface) {
+            return new Point3D(target.getX(), target.getY(), 0);
+        }
+        if (asset instanceof VehiculeSousMarin) {
+            return new Point3D(target.getX(), target.getY(), Math.min(target.getZ(), 0));
+        }
+        return new Point3D(target.getX(), target.getY(), target.getZ());
     }
 }

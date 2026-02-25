@@ -59,15 +59,19 @@ public class VehiculeTerrestre extends ActifMobile {
         passerEnMissionSiNecessaire();
 
         Point3D target2D = new Point3D(cible.getX(), cible.getY(), 0);
-        if (getCurrentPath().isEmpty()) {
-            setCurrentPath(zone.findPath(getPosition(), target2D, false));
+        if (!zone.isLand(target2D)) {
+            return;
         }
 
-        Point3D waypoint = target2D;
-        if (!getCurrentPath().isEmpty()) {
-            Point3D next = getCurrentPath().get(0);
-            waypoint = new Point3D(next.getX(), next.getY(), 0);
+        if (getCurrentPath().isEmpty()) {
+            setCurrentPath(zone.findPath(getPosition(), target2D, false));
+            if (getCurrentPath().isEmpty()) {
+                return;
+            }
         }
+
+        Point3D next = getCurrentPath().get(0);
+        Point3D waypoint = new Point3D(next.getX(), next.getY(), 0);
 
         if (estArrive(waypoint, WAYPOINT_TOLERANCE)) {
             if (!getCurrentPath().isEmpty()) {

@@ -56,6 +56,26 @@ public class ZoneOperationTest {
     }
 
     @Test
+    public void testFindPathLandReturnsEmptyWhenTargetIsWater() {
+        Point3D start = new Point3D(300, 300, 0);
+        Point3D end = new Point3D(500, 500, 0);
+
+        List<Point3D> path = zone.findPath(start, end, false);
+
+        assertTrue(path.isEmpty());
+    }
+
+    @Test
+    public void testFindPathMarineReturnsEmptyWhenTargetIsLand() {
+        Point3D start = new Point3D(100, 100, 0);
+        Point3D end = new Point3D(300, 300, 0);
+
+        List<Point3D> path = zone.findPath(start, end, true);
+
+        assertTrue(path.isEmpty());
+    }
+
+    @Test
     public void testIsCollision() {
         Obstacle obs = new Obstacle(new Point3D(500, 500, 50), 10);
         zone.addObstacle(obs);

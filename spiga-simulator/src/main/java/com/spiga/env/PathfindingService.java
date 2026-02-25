@@ -99,9 +99,7 @@ public class PathfindingService {
             }
         }
 
-        List<Point3D> fallback = new ArrayList<>();
-        fallback.add(new Point3D(end.getX(), end.getY(), end.getZ()));
-        return fallback;
+        return new ArrayList<>();
     }
 
     private Node toNode(Point3D point) {

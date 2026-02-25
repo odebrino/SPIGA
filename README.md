@@ -1,112 +1,78 @@
-# SPIGA Simulator (Simulateur de Planification et de Gestion d’Actifs Mobiles)
+# SPIGA Simulator
 
-SPIGA is a Java-based simulator for managing a fleet of heterogeneous mobile assets (Aerial Drones, Marine Vehicles, Land Vehicles) in a dynamic 3D environment.
+[![CI](https://github.com/odebrino/SPIGA/actions/workflows/ci.yml/badge.svg)](https://github.com/odebrino/SPIGA/actions/workflows/ci.yml)
+[![CodeQL](https://github.com/odebrino/SPIGA/actions/workflows/codeql.yml/badge.svg)](https://github.com/odebrino/SPIGA/actions/workflows/codeql.yml)
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
 
-## Prerequisites
+SPIGA (Simulateur de Planification et de Gestion d'Actifs Mobiles) is a Java simulator for coordinating heterogeneous mobile assets (air, sea, and land) in a dynamic 3D environment.
 
-To run this project, you need:
-*   **Java Development Kit (JDK) 17** or higher.
-*   **Maven** (Build tool).
+## Repository Layout
 
-## Installation Guide
+- `spiga-simulator/`: Maven Java project (source code, tests, build config)
+- `.github/`: CI/CD workflows, issue templates, and automation config
 
-### 1. Install Java 17+ and Maven
+## Requirements
 
-#### 🪟 Windows
-Using [Chocolatey](https://chocolatey.org/):
-```powershell
-choco install openjdk17 maven
-```
-Or download manually from [Adoptium](https://adoptium.net/) and [Apache Maven](https://maven.apache.org/download.cgi).
+- JDK 17 or newer
+- Git
 
-#### 🍎 macOS
-Using [Homebrew](https://brew.sh/):
+No global Maven installation is required. Use the Maven Wrapper included in this repo.
+
+## Quick Start
+
 ```bash
-brew install openjdk@17 maven
+git clone https://github.com/odebrino/SPIGA.git
+cd SPIGA/spiga-simulator
+./mvnw -B test
 ```
 
-#### 🐧 Linux (Debian/Ubuntu/Mint)
-```bash
-sudo apt update
-sudo apt install openjdk-17-jdk maven
-```
-
-#### 🎩 Linux (RedHat/Fedora/CentOS)
-```bash
-sudo dnf install java-17-openjdk-devel maven
-```
-
-#### 🏹 Linux (Arch Linux/Manjaro)
-```bash
-sudo pacman -S jdk17-openjdk maven
-```
-
-### 2. Clone the Repository
-```bash
-git clone <repository-url>
-cd SPIGA
-cd spiga-simulator
-```
-
-## Building the Project
-
-Run the following command in the project root to clean and build the application:
+## Build and Verify
 
 ```bash
 cd spiga-simulator
-mvn clean package
+./mvnw -B verify
 ```
 
-## Running the Application
+## Run the Simulator
 
-### 🖥️ Graphical User Interface (JavaFX)
-This is the main interactive mode with visualization.
+### JavaFX UI
 
 ```bash
 cd spiga-simulator
-mvn javafx:run
+./mvnw javafx:run
 ```
 
-**Controls:**
-*   **Left-Click** on a vehicle to select it (Red ring).
-*   **Left-Click** on the map to move the selected vehicle.
-*   **Right-Click** on the map to move the selected vehicle.
-*   **Dashboard**: Use the panel on the right to add new assets or set a global target.
-
-### ⌨️ Command Line Interface (CLI)
-A text-based mode for testing core logic.
+### CLI Mode
 
 ```bash
 cd spiga-simulator
-mvn exec:java -Dexec.mainClass="com.spiga.ui.ConsoleInterface"
+./mvnw -B exec:java -Dexec.mainClass="com.spiga.ui.ConsoleInterface"
 ```
 
-## Project Structure
-
-The project is organized with a dedicated application layer and split environment services:
+## Project Packages
 
 - `com.spiga.core`: domain models and vehicle behavior
-- `com.spiga.env`: environment orchestration (`ZoneOperation`) and dedicated services
-  - `TerrainService`: land/sea terrain checks
-  - `CollisionService`: obstacle and dynamic collision checks
-  - `PathfindingService`: grid-based A* pathfinding
-- `com.spiga.mission`: mission and fleet orchestration domain objects
-- `com.spiga.app`: application bootstrap/services (`SimulationContext`, `SimulationBootstrap`, `AssetFactory`)
-- `com.spiga.ui`: JavaFX and CLI frontends
+- `com.spiga.env`: terrain, collision, and pathfinding services
+- `com.spiga.mission`: mission and fleet orchestration
+- `com.spiga.app`: application bootstrap and wiring
+- `com.spiga.ui`: JavaFX and CLI interfaces
 
-Additional repository structure:
+## Quality and Automation
 
-- `docs/consignes-projet.txt`: original project assignment/requirements document
+- GitHub Actions CI on pushes and pull requests
+- Maven Enforcer for Java/Maven version checks
+- Surefire/Failsafe pinned for reproducible test execution
+- Jacoco reports generated during test phase
+- Dependabot for dependency updates
 
-## Vehicle Types & Constraints
+## Contributing and Policies
 
-*   **DroneReconnaissance / DroneLogistique**: Aerial drones. Can fly over **Land** and **Sea**.
-*   **VehiculeSurface (Boat)**: Marine vehicle. Can only operate in **Sea** (Blue area).
-*   **VehiculeSousMarin (Submarine)**: Underwater vehicle. Can only operate in **Sea** (Blue area).
-*   **VehiculeTerrestre (Car)**: Land vehicle. Can only operate on **Land** (Green area).
+- Contribution guide: [CONTRIBUTING.md](CONTRIBUTING.md)
+- Code of conduct: [CODE_OF_CONDUCT.md](CODE_OF_CONDUCT.md)
+- Security policy: [SECURITY.md](SECURITY.md)
+- Support guide: [SUPPORT.md](SUPPORT.md)
+- Changelog: [CHANGELOG.md](CHANGELOG.md)
 
-## Troubleshooting
+## License
 
-*   **"Glitching" or Lag**: Ensure you are not running the CLI and GUI simultaneously in a way that conflicts, though they are separate. The simulation runs at ~10 FPS for stability.
-*   **Marine Assets Stuck**: Ensure they are spawned in the Sea (X > 500).
-*   **JavaFX Issues**: Ensure your JDK includes JavaFX or that Maven downloads the dependencies correctly (handled automatically by `pom.xml`).
+This project is licensed under the MIT License. See [LICENSE](LICENSE).

@@ -46,11 +46,13 @@ public class DroneLogistique extends ActifAerien {
 
     @Override
     public void demarrer() {
+        super.demarrer();
         System.out.println(getId() + " : Rotors activés.");
     }
 
     @Override
     public void arreter() {
+        super.arreter();
         System.out.println(getId() + " : Rotors arrêtés.");
     }
 

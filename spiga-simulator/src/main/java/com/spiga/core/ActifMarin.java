@@ -25,12 +25,12 @@ public abstract class ActifMarin extends ActifMobile {
 
         if (getCurrentPath().isEmpty()) {
             setCurrentPath(zone.findPath(getPosition(), cible, true));
+            if (getCurrentPath().isEmpty()) {
+                return;
+            }
         }
 
-        Point3D waypoint = cible;
-        if (!getCurrentPath().isEmpty()) {
-            waypoint = getCurrentPath().get(0);
-        }
+        Point3D waypoint = getCurrentPath().get(0);
 
         double zCible = normaliserProfondeurCible(cible.getZ());
         waypoint = new Point3D(waypoint.getX(), waypoint.getY(), zCible);

@@ -19,11 +19,11 @@ public class VehiculeSousMarinTest {
 
     @Test
     public void testUnderwaterMovement() {
-        Point3D target = new Point3D(600, 600, -50);
+        Point3D target = new Point3D(550, 500, -50);
         sub.deplacer(target, zone);
 
         assertTrue(sub.getPosition().getX() > 500);
-        assertTrue(sub.getPosition().getY() > 500);
+        assertEquals(500, sub.getPosition().getY(), 20.0);
         assertEquals(-50, sub.getPosition().getZ(), 0.1);
     }
 

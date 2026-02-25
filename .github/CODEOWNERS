@@ -1,0 +1,6 @@
+# Default code owners
+* @odebrino
+
+# Infrastructure and automation
+/.github/ @odebrino
+/spiga-simulator/ @odebrino

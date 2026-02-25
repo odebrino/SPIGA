@@ -25,9 +25,9 @@ public class MainApp extends Application {
 
         simulationView.setOnUpdate(dashboard::update);
 
-        dashboard.setOnSetTarget((target, type) -> {
+        dashboard.setOnSetTarget((target, objectif) -> {
             bootstrap.assignGlobalTarget(context, target);
-            System.out.println("Global target set to: " + target + " (" + type + ")");
+            System.out.println("Global target set to: " + target + " (" + objectif + ")");
         });
 
         dashboard.setOnCreateGroupMission((ids, target, objectif) -> {

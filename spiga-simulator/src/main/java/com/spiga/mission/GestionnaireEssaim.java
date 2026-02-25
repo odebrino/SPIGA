@@ -3,6 +3,7 @@ package com.spiga.mission;
 import com.spiga.core.ActifMobile;
 import com.spiga.core.EtatOperationnel;
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -36,7 +37,7 @@ public class GestionnaireEssaim {
     public ActifMobile suggererActif(double minAutonomie) {
         return getActifsDisponibles().stream()
                 .filter(a -> a.getAutonomieActuelle() >= minAutonomie)
-                .findFirst()
+                .max(Comparator.comparingDouble(ActifMobile::getAutonomieActuelle))
                 .orElse(null);
     }
 

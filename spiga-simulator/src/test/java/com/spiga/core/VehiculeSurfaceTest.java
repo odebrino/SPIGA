@@ -19,11 +19,11 @@ public class VehiculeSurfaceTest {
 
     @Test
     public void testSurfaceMovement() {
-        Point3D target = new Point3D(600, 600, 0);
+        Point3D target = new Point3D(550, 500, 0);
         ship.deplacer(target, zone);
 
         assertTrue(ship.getPosition().getX() > 500);
-        assertTrue(ship.getPosition().getY() > 500);
+        assertEquals(500, ship.getPosition().getY(), 20.0);
         assertEquals(0, ship.getPosition().getZ(), 0.1);
     }
 }

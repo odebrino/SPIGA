@@ -46,11 +46,13 @@ public class DroneReconnaissance extends ActifAerien {
 
     @Override
     public void demarrer() {
+        super.demarrer();
         System.out.println(getId() + " : Décollage immédiat.");
     }
 
     @Override
     public void arreter() {
+        super.arreter();
         System.out.println(getId() + " : Atterrissage.");
     }
 
