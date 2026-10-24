@@ -5,7 +5,7 @@
 3. Créer une mission
 4. Simuler un pas de temps
 5. Quitter
-Choix: ID: Type (1: Recon, 2: Logistique, 3: Surface, 4: Sous-marin, 5: Terrestre): 
+Choix: ID: Type (1: Recon, 2: Logistique, 3: Surface, 4: Sous-marin, 5: Terrestre):
 Actif ajouté : DEMO
 
 --- SPIGA Simulator Console ---
@@ -14,7 +14,7 @@ Actif ajouté : DEMO
 3. Créer une mission
 4. Simuler un pas de temps
 5. Quitter
-Choix: 
+Choix:
 --- Flotte ---
 DEMO [DroneLogistique] - AU_SOL - Pos: Point3D{x=200.0, y=200.0, z=50.0}
 
@@ -42,7 +42,7 @@ DEMO déplacé vers Point3D{x=143.4314575050762, y=143.4314575050762, z=50.0}
 3. Créer une mission
 4. Simuler un pas de temps
 5. Quitter
-Choix: 
+Choix:
 --- Flotte ---
 DEMO [DroneLogistique] - EN_MISSION - Pos: Point3D{x=143.4314575050762, y=143.4314575050762, z=50.0}
 
@@ -52,4 +52,4 @@ DEMO [DroneLogistique] - EN_MISSION - Pos: Point3D{x=143.4314575050762, y=143.43
 3. Créer une mission
 4. Simuler un pas de temps
 5. Quitter
-Choix: 
+Choix:

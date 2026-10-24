@@ -3,6 +3,16 @@ name: Dependency Review
 on:
   pull_request:
     branches: ["main", "master"]
+  workflow_dispatch:
+    inputs:
+      base-ref:
+        description: Base revision to compare
+        required: true
+        default: b125e454f394827b4ffa15b8758b2c45d74c0812
+      head-ref:
+        description: Head revision to compare
+        required: true
+        default: main
 
 permissions:
   contents: read
@@ -16,3 +26,6 @@ jobs:
 
       - name: Dependency Review
         uses: actions/dependency-review-action@v5.0.0
+        with:
+          base-ref: ${{ inputs.base-ref || github.event.pull_request.base.sha }}
+          head-ref: ${{ inputs.head-ref || github.event.pull_request.head.sha }}
