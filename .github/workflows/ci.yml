@@ -3,6 +3,7 @@ name: CI
 on:
   push:
     branches: ["main", "master"]
+    tags: ["v*"]
   pull_request:
     branches: ["main", "master"]
 
@@ -37,9 +38,34 @@ jobs:
         working-directory: spiga-simulator
         run: ./mvnw -B -ntp verify
 
+      - name: Verify scripted CLI from the built jar
+        working-directory: spiga-simulator
+        run: |
+          java -cp target/spiga-simulator-1.0.0.jar com.spiga.ui.ConsoleInterface < ../docs/examples/cli-input.txt > target/cli-output.txt
+          grep -q RECON-DEMO target/cli-output.txt
+          grep -q EN_MISSION target/cli-output.txt
+
       - name: Upload Jacoco Report
         if: matrix.java == 17
         uses: actions/upload-artifact@v7
         with:
           name: jacoco-report
           path: spiga-simulator/target/site/jacoco
+
+  release:
+    if: startsWith(github.ref, 'refs/tags/v')
+    needs: build-and-test
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@v6
+      - uses: actions/setup-java@v5
+        with:
+          distribution: temurin
+          java-version: '17'
+          cache: maven
+      - run: scripts/package-cli.sh
+      - env:
+          GH_TOKEN: ${{ github.token }}
+        run: gh release create "$GITHUB_REF_NAME" spiga-simulator/target/spiga-cli-1.0.0.tar.gz spiga-simulator/target/SHA256SUMS --verify-tag --title "SPIGA $GITHUB_REF_NAME" --notes-file docs/release-cli.md

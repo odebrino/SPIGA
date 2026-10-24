@@ -12,6 +12,8 @@ The map shows land/water regions and the current fleet. Assets have x/y/z positi
 
 [Architecture and implementation](docs/architecture.md) · [Reproducible demonstrations](docs/demonstrations.md)
 
+[Download the CLI release](https://github.com/odebrino/SPIGA/releases/latest) · [Launch requirements](docs/release-cli.md) · [Dependency maintenance](docs/dependency-maintenance.md)
+
 ## Run a repeatable example
 
 Requires JDK 17 or 21 and Git. From a fresh clone:

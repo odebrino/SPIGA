@@ -4,7 +4,7 @@
   <groupId>com.spiga</groupId>
   <artifactId>spiga-simulator</artifactId>
   <packaging>jar</packaging>
-  <version>1.0-SNAPSHOT</version>
+  <version>1.0.0</version>
   <name>spiga-simulator</name>
   <description>Simulator for planning and managing heterogeneous mobile assets in a 3D operational zone.</description>
   <url>https://github.com/odebrino/SPIGA</url>
@@ -40,11 +40,11 @@
     <maven.compiler.source>17</maven.compiler.source>
     <maven.compiler.target>17</maven.compiler.target>
     <maven.compiler.parameters>true</maven.compiler.parameters>
-    <maven.compiler.plugin.version>3.13.0</maven.compiler.plugin.version>
-    <maven.surefire.plugin.version>3.2.5</maven.surefire.plugin.version>
-    <maven.failsafe.plugin.version>3.2.5</maven.failsafe.plugin.version>
-    <maven.enforcer.plugin.version>3.5.0</maven.enforcer.plugin.version>
-    <junit.jupiter.version>5.10.0</junit.jupiter.version>
+    <maven.compiler.plugin.version>3.15.0</maven.compiler.plugin.version>
+    <maven.surefire.plugin.version>3.5.5</maven.surefire.plugin.version>
+    <maven.failsafe.plugin.version>3.5.5</maven.failsafe.plugin.version>
+    <maven.enforcer.plugin.version>3.6.3</maven.enforcer.plugin.version>
+    <junit.jupiter.version>6.1.0</junit.jupiter.version>
     <jacoco.minimum.line.ratio>0.45</jacoco.minimum.line.ratio>
     <jacoco.minimum.branch.ratio>0.40</jacoco.minimum.branch.ratio>
   </properties>
@@ -65,12 +65,12 @@
     <dependency>
       <groupId>org.openjfx</groupId>
       <artifactId>javafx-controls</artifactId>
-      <version>17.0.8</version>
+      <version>17.0.21</version>
     </dependency>
     <dependency>
       <groupId>org.openjfx</groupId>
       <artifactId>javafx-fxml</artifactId>
-      <version>17.0.8</version>
+      <version>17.0.21</version>
     </dependency>
   </dependencies>
   <build>
@@ -136,7 +136,7 @@
       <plugin>
         <groupId>org.jacoco</groupId>
         <artifactId>jacoco-maven-plugin</artifactId>
-        <version>0.8.10</version>
+        <version>0.8.14</version>
         <executions>
           <execution>
             <goals>
