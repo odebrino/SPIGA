@@ -14,3 +14,6 @@ The release keeps the documented JDK 17/21 matrix. Updates are verified with `./
 Sources: [JUnit supported Java versions](https://docs.junit.org/6.0.3/overview.html), [JavaFX 26 runtime requirement](https://openjfx.io/highlights/26/), [Maven Central JavaFX version metadata](https://repo.maven.apache.org/maven2/org/openjfx/javafx-controls/maven-metadata.xml). The actual Maven resolution and CI matrix validate the selected versions.
 
 Dependabot groups routine Maven updates and ignores JavaFX major updates while the JDK 17 floor remains. Review that floor deliberately before adopting a newer JavaFX major. No dependency alerts were open at the time of this check.
+
+
+The newly scheduled check then opened #21–#23. After their JDK 17/21, CodeQL and dependency-review checks passed, the main branch adopted Compiler 3.16.0, Surefire/Failsafe 3.6.0, JUnit 6.1.3, JaCoCo 0.8.15, Maven 3.10.0, checkout v7, and setup-java v6. #21/#22 were merged; #23's equivalent change was applied directly after the overlapping workflow edits caused a merge conflict. The Windows wrapper is normalized in Git according to `.gitattributes` and checked out with CRLF. The v1.0.0 release retains its verified original dependency versions.
