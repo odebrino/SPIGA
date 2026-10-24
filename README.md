@@ -4,7 +4,34 @@
 [![CodeQL](https://github.com/odebrino/SPIGA/actions/workflows/codeql.yml/badge.svg)](https://github.com/odebrino/SPIGA/actions/workflows/codeql.yml)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
 
-SPIGA (Simulateur de Planification et de Gestion d'Actifs Mobiles) is a Java simulator for coordinating heterogeneous mobile assets (air, sea, and land) in a dynamic 3D environment.
+SPIGA (Simulateur de Planification et de Gestion d'Actifs Mobiles) is a Java simulator for coordinating air, sea, and land assets. It combines grid-based A* pathfinding, collision checks, mission assignment, and JavaFX/CLI interfaces around a shared simulation core.
+
+![Actual SPIGA JavaFX interface](docs/images/simulator.png)
+
+The map shows land/water regions and the current fleet. Assets have x/y/z positions; the displayed map and A* planning grid use an x/y projection. The dashboard supports adding assets and assigning targets.
+
+[Architecture and implementation](docs/architecture.md) · [Reproducible demonstrations](docs/demonstrations.md)
+
+## Run a repeatable example
+
+Requires JDK 17 or 21 and Git. From a fresh clone:
+
+```bash
+git clone https://github.com/odebrino/SPIGA.git
+cd SPIGA/spiga-simulator
+./mvnw -B -ntp verify
+./mvnw -q compile exec:java -Dexec.mainClass=com.spiga.ui.ConsoleInterface < ../docs/examples/cli-input.txt
+```
+
+This creates a logistics drone, assigns a named mission, advances one step, lists the resulting fleet state, and exits. It runs without a graphical display. [Verified input and transcript](docs/demonstrations.md).
+
+The baseline audit passed **39 tests** on JDK 21, with JaCoCo reporting **46.2% line / 45.0% branch coverage**. [Revision, environment, and interpretation](docs/architecture.md).
+
+## Engineering focus
+
+The repository separates vehicle contracts and behavior, terrain/collision/pathfinding services, mission/fleet management, shared application bootstrap, and presentation. The same construction and compatibility rules support both front ends. Tests cover domain behavior, movement constraints, collisions, environment logic, mission coordination, and bootstrap behavior.
+
+Maintained by [Rafael Ode Brino](https://github.com/odebrino). Implementation and change history are available in the repository; external dependencies retain their own attribution and licenses.
 
 ## Repository Layout
 

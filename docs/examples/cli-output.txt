@@ -1,0 +1,55 @@
+
+--- SPIGA Simulator Console ---
+1. Ajouter un actif
+2. Lister la flotte
+3. Créer une mission
+4. Simuler un pas de temps
+5. Quitter
+Choix: ID: Type (1: Recon, 2: Logistique, 3: Surface, 4: Sous-marin, 5: Terrestre): 
+Actif ajouté : DEMO
+
+--- SPIGA Simulator Console ---
+1. Ajouter un actif
+2. Lister la flotte
+3. Créer une mission
+4. Simuler un pas de temps
+5. Quitter
+Choix: 
+--- Flotte ---
+DEMO [DroneLogistique] - AU_SOL - Pos: Point3D{x=200.0, y=200.0, z=50.0}
+
+--- SPIGA Simulator Console ---
+1. Ajouter un actif
+2. Lister la flotte
+3. Créer une mission
+4. Simuler un pas de temps
+5. Quitter
+Choix: ID Mission: DEMO : Rotors activés.
+Mission RECON-DEMO assignée à DEMO et démarrée.
+
+--- SPIGA Simulator Console ---
+1. Ajouter un actif
+2. Lister la flotte
+3. Créer une mission
+4. Simuler un pas de temps
+5. Quitter
+Choix: Simulation d'un pas de temps...
+DEMO déplacé vers Point3D{x=143.4314575050762, y=143.4314575050762, z=50.0}
+
+--- SPIGA Simulator Console ---
+1. Ajouter un actif
+2. Lister la flotte
+3. Créer une mission
+4. Simuler un pas de temps
+5. Quitter
+Choix: 
+--- Flotte ---
+DEMO [DroneLogistique] - EN_MISSION - Pos: Point3D{x=143.4314575050762, y=143.4314575050762, z=50.0}
+
+--- SPIGA Simulator Console ---
+1. Ajouter un actif
+2. Lister la flotte
+3. Créer une mission
+4. Simuler un pas de temps
+5. Quitter
+Choix: 
