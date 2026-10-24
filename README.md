@@ -33,7 +33,7 @@ The baseline audit passed **39 tests** on JDK 21, with JaCoCo reporting **46.2% 
 
 The repository separates vehicle contracts and behavior, terrain/collision/pathfinding services, mission/fleet management, shared application bootstrap, and presentation. The same construction and compatibility rules support both front ends. Tests cover domain behavior, movement constraints, collisions, environment logic, mission coordination, and bootstrap behavior.
 
-Maintained by [Rafael Ode Brino](https://github.com/odebrino). Documented release work covers reproducible demonstrations, architecture documentation, CI/dependency maintenance, and the standalone CLI distribution. [Contribution evidence](docs/contributions.md) links the relevant changes and preserves the original contributor scope.
+**Collaborative project**, contributed to and maintained by [Rafael Ode Brino](https://github.com/odebrino). Documented release work covers reproducible demonstrations, architecture documentation, CI/dependency maintenance, and the standalone CLI distribution. [Contribution evidence](docs/contributions.md) links the relevant changes and preserves the original contributor scope.
 
 ## Repository Layout
 

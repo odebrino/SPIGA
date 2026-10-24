@@ -1,6 +1,6 @@
 # Contributions and implementation scope
 
-Maintained by [Rafael Ode Brino](https://github.com/odebrino). The existing MIT license credits **SPIGA Contributors** and is retained.
+SPIGA is a **collaborative project**. [Rafael Ode Brino](https://github.com/odebrino) is a project contributor and maintainer. The existing MIT license credits **SPIGA Contributors** and is retained.
 
 ## Documented release and maintenance work
 
